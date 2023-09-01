@@ -4,7 +4,7 @@ FROM golang:1.20.5 as go-builder
 WORKDIR /build
 
 # Install the dependencies
-RUN git clone -b secret https://github.com/seanly/dapper /build
+RUN git clone -b next https://github.com/seanly/dapper /build
 RUN go mod download
 
 RUN set -eux \
