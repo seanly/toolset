@@ -96,3 +96,7 @@ services:
     build: 
       context: ./pgloader
     image: seanly/toolset:pgloader
+  etcd:
+    build: 
+      context: ./etcd
+    image: seanly/toolset:etcd
