@@ -3,7 +3,6 @@ FROM alpine
 #RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk update && apk add --update --no-cache curl 
 
-
 RUN \
     ( \
     set -x; cd "$(mktemp -d)" && \

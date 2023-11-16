@@ -100,3 +100,7 @@ services:
     build: 
       context: ./etcd
     image: seanly/toolset:etcd
+  k9s:
+    build: 
+      context: ./k9s
+    image: seanly/toolset:k9s
