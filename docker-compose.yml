@@ -104,3 +104,7 @@ services:
     build: 
       context: ./k9s
     image: seanly/toolset:k9s
+  brew:
+    build: 
+      context: ./brew
+    image: seanly/toolset:brew
