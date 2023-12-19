@@ -108,3 +108,7 @@ services:
     build: 
       context: ./brew
     image: seanly/toolset:brew
+  trivy:
+    build: 
+      context: ./trivy
+    image: seanly/toolset:trivy
