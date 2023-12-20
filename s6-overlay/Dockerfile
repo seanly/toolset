@@ -54,8 +54,16 @@ RUN \
     telnet unzip zip python-pip jq bzip2 \
     strace lsof htop tcpdump net-tools iptraf sysstat git vim \
     bind9-utils iproute2 && \
-  locale-gen zh_CN.utf8 && \
+  echo "**** generate locale ****" && \
   locale-gen en_GB.UTF-8 && \
+  echo "**** create abc user and make our folders ****" && \
+  useradd -u 911 -U -d /config -s /bin/false abc && \
+  usermod -G users abc && \
+  mkdir -p \
+    /app \
+    /config \
+    /defaults \
+    /lsiopy && \
   echo "**** cleanup ****" && \
   apt-get autoremove && \
   apt-get clean && \
