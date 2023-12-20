@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if builtin command -v crontab >/dev/null 2>&1 && [[ -n "$(crontab -l -u root 2>/dev/null || true)" ]]; then
+    if [[ -f /usr/bin/apt ]] && [[ -f /usr/sbin/cron ]]; then
+        exec /usr/sbin/cron -f -L 5
+    else
+        echo "**** cron not found ****"
+        sleep infinity
+    fi
+else
+    sleep infinity
+fi

@@ -112,3 +112,7 @@ services:
     build: 
       context: ./trivy
     image: seanly/toolset:trivy
+  s6-overlay:
+    build: 
+      context: ./s6-overlay
+    image: seanly/toolset:s6-overlay

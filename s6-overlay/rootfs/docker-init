@@ -1,0 +1,64 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+
+# from https://github.com/linuxserver/docker-mods/blob/mod-scripts/docker-mods.v3
+
+# Use /command/with-contenv shebang because /usr/bin/with-contenv is created in this script
+
+# Create our noisy chown alias to handle read-only/remote volumes
+create_lsiown_alias() {
+    # intentional tabs in the heredoc
+    cat <<-'EOF' >/usr/bin/lsiown
+	#!/bin/bash
+
+	MAXDEPTH=("-maxdepth" "0")
+	OPTIONS=()
+	while getopts RcfvhHLP OPTION
+	do
+	    if [[ "${OPTION}" != "?" && "${OPTION}" != "R" ]]; then
+	        OPTIONS+=("-${OPTION}")
+	    fi
+	    if [[ "${OPTION}" = "R" ]]; then
+	        MAXDEPTH=()
+	    fi
+	done
+
+	shift $((OPTIND - 1))
+	OWNER=$1
+	IFS=: read -r USER GROUP <<< "${OWNER}"
+	if [[ -z "${GROUP}" ]]; then
+	    printf '**** Permissions could not be set. Group is missing or incorrect, expecting user:group. ****\n'
+	    exit 0
+	fi
+
+	ERROR='**** Permissions could not be set. This is probably because your volume mounts are remote or read-only. ****\n**** The app may not work properly and we will not provide support for it. ****\n'
+	PATH=("${@:2}")
+	/usr/bin/find "${PATH[@]}" "${MAXDEPTH[@]}" \( ! -group "${GROUP}" -o ! -user "${USER}" \) -exec chown "${OPTIONS[@]}" "${USER}":"${GROUP}" {} + || printf "${ERROR}"
+	EOF
+    chmod +x /usr/bin/lsiown
+}
+
+# Create our with-contenv alias with umask support
+create_with_contenv_alias() {
+    if [[ ! -f /command/with-contenv ]]; then
+        echo "[mod-init] /command/with-contenv not found, skipping alias creation"
+        return
+    fi
+    rm -rf /usr/bin/with-contenv
+    # intentional tabs in the heredoc
+    cat <<-EOF >/usr/bin/with-contenv
+	#!/bin/bash
+	if [[ -f /run/s6/container_environment/UMASK ]] &&
+	    { [[ "\$(pwdx \$\$)" =~ "/run/s6/legacy-services/" ]] ||
+	        [[ "\$(pwdx \$\$)" =~ "/run/s6/services/" ]] ||
+	        [[ "\$(pwdx \$\$)" =~ "/servicedirs/svc-" ]]; }; then
+	    umask "\$(cat /run/s6/container_environment/UMASK)"
+	fi
+	exec /command/with-contenv "\$@"
+	EOF
+    chmod +x /usr/bin/with-contenv
+}
+
+# Run alias creation functions
+create_lsiown_alias
+create_with_contenv_alias

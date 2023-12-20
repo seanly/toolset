@@ -9,3 +9,7 @@ docker run --rm -it -v $(pwd):/code seanly/toolset:trivy \
     /code/target/bom.json \
     -s CRITICAL,HIGH --cache-dir /root/.cache/trivy
 ```
+
+## air-gap
+
+https://aquasecurity.github.io/trivy/v0.48/docs/advanced/air-gap/
