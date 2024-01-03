@@ -1,4 +1,5 @@
-FROM eclipse-temurin:8u362-b09-jdk-focal
+ARG VERSION=8u372-b07-jdk-jammy
+FROM eclipse-temurin:${VERSION}
 
 ENV TZ=Asia/Shanghai
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8

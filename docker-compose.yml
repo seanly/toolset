@@ -1,9 +1,9 @@
 version: "3"
 services:
-  java8:
+  openjdk8:
     build: 
-      context: ./java8
-    image: seanly/toolset:java8
+      context: ./openjdk8
+    image: seanly/toolset:openjdk8u372
   docker:
     build: 
       context: ./docker
