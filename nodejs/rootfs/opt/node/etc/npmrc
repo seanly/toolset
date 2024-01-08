@@ -1,0 +1,10 @@
+prefix=/opt/global-modules
+registry=https://registry.npmmirror.com
+loglevel="error"
+color=false
+progress=false
+
+disturl=https://npmmirror.com/dist
+electron_mirror=https://npmmirror.com/mirrors/electron/
+sass_binary_site=https://npmmirror.com/mirrors/node-sass/
+phantomjs_cdnurl=https://npmmirror.com/mirrors/phantomjs/
