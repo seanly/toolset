@@ -1,13 +1,30 @@
 FROM ubuntu:22.04
 
-RUN apt update && \
-    apt-get install build-essential procps curl file git -y
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew \
+SHELL ["/bin/bash", "-c"]
+
+ENV TZ=Asia/Shanghai
+RUN set -eux;\
+    apt update && \
+    apt install -y --no-install-recommends \
+        apt-transport-https ca-certificates\
+        build-essential\
+        procps \
+        curl wget \
+        xz-utils\
+        file \
+        git && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&\
+    echo $TZ > /etc/timezone && \
+    apt install -y --no-install-recommends tzdata && \
+    dpkg-reconfigure --frontend noninteractive tzdata
+
+COPY init.sh /
+
+RUN git clone --depth 1 https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew \
     && mkdir ~/.linuxbrew/bin \
     && ln -s ../Homebrew/bin/brew ~/.linuxbrew/bin \
     && eval $(~/.linuxbrew/bin/brew shellenv) \
-    && brew --version
-
-COPY init.sh /
-RUN bash /init.sh
+    && brew --version \
+    && bash /init.sh
